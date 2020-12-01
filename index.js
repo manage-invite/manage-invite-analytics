@@ -29,7 +29,7 @@ app.get('/', async (req, res) => {
     `);
     res.render('stats.ejs', {
         labels: results.map((e) => e.day),
-        values: results.map((e) => e.sum)
+        values: results.map((e) => req.query.money ? e.sum * 1.5 : e.sum)
     });
 });
 
@@ -39,19 +39,19 @@ app.get('/by-day', async (req, res) => {
             select
             date_trunc('day', created_at) as day,
             count(1)
-            from payments WHERE type = 'trial_activation'
+            from payments WHERE type = 'paypal_dash_pmnt_month'
             group by 1
         )
         
-        select day, sum(count)
+        select day, to_char(day,'DD-MM') as d, sum(count)
         from data
         group by 1
         order by 1
         DESC
     `);
     res.render('by-day.ejs', {
-        labels: results.map((e) => e.day),
-        values: results.map((e) => e.sum)
+        labels: results.reverse().map((e) => e.d),
+        values: results.map((e) => req.query.money ? e.sum * 1.5 : e.sum)
     });
 });
 
