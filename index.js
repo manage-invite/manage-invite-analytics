@@ -6,6 +6,7 @@ const pool = new Pool({
     password: "",
     port: 5432
 });
+const open = require('open');
 
 const express = require('express');
 const app = express();
@@ -56,4 +57,5 @@ app.get('/by-day', async (req, res) => {
 });
 
 app.listen(8080);
+open('http://localhost:8080')
 console.log('8080 is the magic port');
